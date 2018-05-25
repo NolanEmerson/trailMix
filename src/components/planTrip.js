@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
 import {connect} from 'react-redux';
 import {getDirections,deleteMapDirection} from '../actions';
-import keys from '../assets/config/keys.js.conf';
+import keys from '../assets/config/apiKeys';
 import Search from './search';
 import Logo from './logo';
 import { NavLink } from 'react-router-dom';

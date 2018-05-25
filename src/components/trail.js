@@ -71,13 +71,11 @@ class Trail extends Component {
             <div id={this.props.trail.name} className='trailDiv' onMouseOver={()=>this.handleMouserOver(this.props.trail.name,this.props.trail.marker)} onMouseOut={()=>this.handleMouseOut(this.props.trail.name,this.props.trail.marker)}>
                 <img src={this.props.trail.imgSqSmall || earth} />
                 <div>
-                    <p className="trailName">{this.props.trail.name}</p>
+                    <p>{this.props.trail.name}</p>
                     <p>{this.props.trail.location}</p>
-                    <div>
-                        <span>{this.props.trail.length} miles</span>
-                        <span className="trailDifficulty">{this.translateDifficulty(this.props.trail.difficulty)}</span>
-                    </div>
-                    <p className='tooltip'>{this.translateStars(this.props.trail.stars)} <span className='tooltiptext'> {this.props.trail.stars} </span> </p>
+                    <p>Length: {this.props.trail.length} miles</p>
+                    <p>Difficulty: {this.translateDifficulty(this.props.trail.difficulty)}</p>
+                    <p className='tooltip'>Rating: {this.translateStars(this.props.trail.stars)} <span className='tooltiptext'> {this.props.trail.stars} </span> </p>
                     <Link className='button-link' to={`/planTrip/${this.props.trail.latitude}/lat/${this.props.trail.longitude}/long/${this.props.trail.id}/id/${this.props.location}/location/details`}>Plan a Trip</Link>
                 </div>                
             </div>);

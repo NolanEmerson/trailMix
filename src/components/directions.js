@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {getDirections} from '../actions';
-import keys from '../assets/config/keys.js.conf';
+import keys from '../assets/config/apiKeys';
 
 
 class DrivingDirections extends Component {

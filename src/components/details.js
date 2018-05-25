@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // import '../assets/css/details.css';
 
-import keys from '../assets/config/keys.js.conf';
+import keys from '../assets/config/apiKeys';
 import earth from '../assets/images/logo/earth.png';
 
 class Details extends Component {

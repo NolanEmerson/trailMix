@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Link, Redirect} from 'react-router-dom';
 import DateInput from './datePicker';
 import { ajax } from 'jquery';
-import keys from '../assets/config/keys.js.conf';
+import keys from '../assets/config/apiKeys';
 import darkCloud from '../assets/images/weather/darkCloud.png';
 import fog from '../assets/images/weather/fog.png';
 import partCloud from '../assets/images/weather/partCloud.png';

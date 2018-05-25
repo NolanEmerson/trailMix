@@ -438,7 +438,6 @@ p.label a{
 
 /****** Trail CSS **********/
 .trailDiv{
-    font-family: 'Cabin', sans-serif;
     border: 1px solid darkgreen;
     background-color: whitesmoke;
     border-radius: 15px;
@@ -469,14 +468,11 @@ p.label a{
 
 .trailDiv p{
     margin: 0 0 2% 0;
-    font-size: 0.95em;
 }
 
 .trailDiv p:first-child{    
     font-size: 1.1em;
     font-weight: bold;
-    margin-bottom: 4%;
-    text-transform: capitalize;
 }
 
 .trailDiv img{
@@ -488,13 +484,11 @@ p.label a{
 }
 
 .trailDiv span{
-    /* font-weight: bold; */
-    font-size: 0.95em;
+    font-weight: bold;
 }
 
 .trailDiv a{
     float: right;
-    margin-top: 4%;
 }
 
 .scrollStyle::-webkit-scrollbar-track{
@@ -521,14 +515,6 @@ p.label a{
             )
 }
 
-.iframeRei{
-    display: inline-block;
-    vertical-align: top;
-    border: 0;
-    height: 100%;
-    width: 100%;
-}
-
 .detailsModal{
     background-color:#2a2a2a;
     position: absolute;
@@ -550,18 +536,9 @@ p.label a{
     display: none;
 }
 
-.trailName{
-    color: rgb(39, 63, 2);
-}
-
-.trailDifficulty{
-    float: right;
-}
-
 .tooltip {
     position: relative;
     display: inline-block;
-    color: rgb(237, 212, 88);
 }
 
 .tooltip .tooltiptext {

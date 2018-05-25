@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {getCoordinates} from '../actions';
 import markerIcon2 from '../assets/images/markers/map_marker2.png';
 import markerIcon1 from '../assets/images/markers/map_marker1.png';
-import keys from '../assets/config/keys.js.conf';
+import keys from '../assets/config/apiKeys';
 import Search from './search';
 import Logo from './logo';
 import Sorter from './sorter';
