@@ -8,7 +8,7 @@ Our application was created for any level of hiker to find a trail either nerby 
 
 ## Project
 
-View this project live [HERE](parkerrebensdorf.com/trailMix/)
+View this project live [HERE](https://trailmix.alejandro-gaspar.com)
 
 Or follow the instructions below to view it on your local machine.
 
