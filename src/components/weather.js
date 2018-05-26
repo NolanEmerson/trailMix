@@ -26,21 +26,21 @@ class Weather extends Component{
             day1Back: {},
             day2Back: {},
             day3Back: {},
-            day1Date: this.findCurrentDate(),
+            day1Date: this.selectedDay(0),
             day1Text:{
                 summary: '',
                 high: 'High: ',
                 low: 'Low: ',
                 rain: 'Chance of Rain: '
             },
-            day2Date: this.findDay2Date(),
+            day2Date: this.selectedDay(1),
             day2Text:{
                 summary: '',
                 high: 'High: ',
                 low: 'Low: ',
                 rain: 'Chance of Rain: '
             },
-            day3Date: this.findDay3Date(),
+            day3Date: this.selectedDay(2),
             day3Text:{
                 summary: '',
                 high: 'High: ',
@@ -51,33 +51,35 @@ class Weather extends Component{
 
         this.httpRequest = new XMLHttpRequest();
     }
-    findCurrentDate(){
-        let today = new Date();
-        let dd = today.getDate();
-        let mm = today.getMonth()+1;
-        let yyyy = today.getFullYear();
+    selectedDay(num,newDate){
+        if(!newDate){
+            newDate=new Date();
+        }        
+        newDate.setDate(newDate.getDate()+num);
+        let dd = newDate.getDate();
+        let mm = newDate.getMonth()+1;
+        let yyyy = newDate.getFullYear();
         return `${mm}/${dd}/${yyyy}`
     }
-    findDay2Date(){
-        let today = new Date();
-        let day2 = new Date(today);
-        day2.setDate(today.getDate()+1);
-        let dd = day2.getDate();
-        let mm = day2.getMonth()+1;
-        let yyyy = day2.getFullYear();
-        return `${mm}/${dd}/${yyyy}`
+    
+    updateWeather(inputDate){
+        let date = new Date(inputDate);
+        date.setHours(0,0,0,0);
+        let newDate = date;
+        date = date.getTime()/1000;
+        // console.log(date);
+        this.setState({
+            day1: date,
+            day2: date + 86400,
+            day3: date + 172800,
+            day1Date: this.selectedDay(0,newDate),
+            day2Date: this.selectedDay(1,newDate),
+            day3Date: this.selectedDay(2,newDate),
+        }, ()=>{
+            this.callWeather();
+        })
+    }
 
-        // return `${day2}`
-    }
-    findDay3Date(){
-        let today = new Date();
-        let day3 = new Date(today);
-        day3.setDate(today.getDate()+2);
-        let dd = day3.getDate();
-        let mm = day3.getMonth()+1;
-        let yyyy = day3.getFullYear();
-        return `${mm}/${dd}/${yyyy}`
-    }
     componentWillMount(){
         let currentDate = new Date;
         currentDate = currentDate.setHours(0,0,0,0)/1000;
@@ -322,49 +324,7 @@ class Weather extends Component{
         });
         
     }
-    updateWeather(inputDate){
-        let date = new Date(inputDate);
-        date.setHours(0,0,0,0);
-        let newDate = date;
-        date = date.getTime()/1000;
-        // console.log(date);
-        this.setState({
-            day1: date,
-            day2: date + 86400,
-            day3: date + 172800,
-            day1Date: this.selectedDay1(newDate),
-            day2Date: this.selectedDay2(newDate),
-            day3Date: this.selectedDay3(newDate),
-        }, ()=>{
-            this.callWeather();
-        })
-    }
-
-    selectedDay1(newDate){
-        let dd = newDate.getDate();
-        let mm = newDate.getMonth()+1;
-        let yyyy = newDate.getFullYear();
-        return `${mm}/${dd}/${yyyy}`
-    }
-
-    selectedDay2(newDate){
-        let day2 = new Date(newDate);
-        day2.setDate(newDate.getDate()+1);
-        let dd = day2.getDate();
-        let mm = day2.getMonth()+1;
-        let yyyy = day2.getFullYear();
-        return `${mm}/${dd}/${yyyy}`
-    }
-
-    selectedDay3(newDate){
-        let day3 = new Date(newDate);
-        day3.setDate(newDate.getDate()+2);
-        let dd = day3.getDate();
-        let mm = day3.getMonth()+1;
-        let yyyy = day3.getFullYear();
-        return `${mm}/${dd}/${yyyy}`
-    }
-
+    
     render(){
         return(
             <div className="weatherContainer">
