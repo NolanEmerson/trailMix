@@ -18,14 +18,26 @@ class Weather extends Component{
     constructor(props){
         super(props);
         this.weatherArray = [];
+        let currentDate = new Date;
+        currentDate = currentDate.setHours(0,0,0,0)/1000;
         this.state={
-            day1: null,
-            day2: null,
-            day3: null,
+            day1: currentDate,
+            day2: currentDate + 86400,
+            day3: currentDate + 172800,
+            dateChanged:true,
             latlong: this.props.match.params.lat + ',' + this.props.match.params.long,
-            day1Back: {},
-            day2Back: {},
-            day3Back: {},
+            day1Back: {
+                backgroundImage: `url(${rainbow})`,
+                backgroundColor: 'rgb(10, 181, 233)'
+            },
+            day2Back:{
+                backgroundImage: `url(${rainbow})`,
+                backgroundColor: 'rgb(10, 181, 233)'
+            },
+            day3Back: {
+                backgroundImage: `url(${rainbow})`,
+                backgroundColor: 'rgb(10, 181, 233)'
+            },
             day1Date: this.selectedDay(0),
             day1Text:{
                 summary: '',
@@ -48,17 +60,17 @@ class Weather extends Component{
                 rain: 'Chance of Rain: '
             }
         }
-
         this.httpRequest = new XMLHttpRequest();
     }
     selectedDay(num,newDate){
         if(!newDate){
             newDate=new Date();
         }        
-        newDate.setDate(newDate.getDate()+num);
-        let dd = newDate.getDate();
-        let mm = newDate.getMonth()+1;
-        let yyyy = newDate.getFullYear();
+        let dateSeted = new Date(newDate);
+        dateSeted.setDate(newDate.getDate()+num);
+        let dd = dateSeted.getDate();
+        let mm = dateSeted.getMonth()+1;
+        let yyyy = dateSeted.getFullYear();
         return `${mm}/${dd}/${yyyy}`
     }
     
@@ -67,264 +79,137 @@ class Weather extends Component{
         date.setHours(0,0,0,0);
         let newDate = date;
         date = date.getTime()/1000;
-        // console.log(date);
         this.setState({
             day1: date,
             day2: date + 86400,
             day3: date + 172800,
             day1Date: this.selectedDay(0,newDate),
             day2Date: this.selectedDay(1,newDate),
-            day3Date: this.selectedDay(2,newDate),
-        }, ()=>{
-            this.callWeather();
-        })
-    }
-
-    componentWillMount(){
-        let currentDate = new Date;
-        currentDate = currentDate.setHours(0,0,0,0)/1000;
-
-        // console.log('RAINBOW:', rainbow);
-        this.setState({
-            day1: currentDate,
-            day2: currentDate + 86400,
-            day3: currentDate + 172800,
-            day1Back:{
-                backgroundImage: `url(${rainbow})`,
-                backgroundColor: 'rgb(10, 181, 233)',
-            },
-            day2Back:{
-                backgroundImage: `url(${rainbow})`,
-                backgroundColor: 'rgb(10, 181, 233)',
-            },
-            day3Back:{
-                backgroundImage: `url(${rainbow})`,
-                backgroundColor: 'rgb(10, 181, 233)',
-            },
-        }, () => {
-            this.callWeather();
+            day3Date: this.selectedDay(2,newDate),            
+            dateChanged:true
         });
-        
     }
-    
-    callWeather(){
+
+    componentDidUpdate(){
+        if(this.state.dateChanged){
+            this.callApiByDay(this.state.day1,1);
+            this.callApiByDay(this.state.day2,2);
+            this.callApiByDay(this.state.day3,3);      
+        }  
+    }
+
+    componentDidMount(){
+        this.callApiByDay(this.state.day1,1);
+        this.callApiByDay(this.state.day2,2);
+        this.callApiByDay(this.state.day3,3);      
+    }    
+
+    callApiByDay(day,num){
         ajax({
-            url: 'https://api.darksky.net/forecast/'+keys.darksky+'/' + this.state.latlong + ',' + this.state.day1,
+            url: 'https://api.darksky.net/forecast/'+keys.darksky+'/' + this.state.latlong + ',' + day,
             dataType: 'jsonp',
             method: 'get',
             success: response => {
-                    let iconName1 = response.hourly.icon;
-                    // console.log('Day1 summary: '+iconName1);
-                    let backgroundImg;
-                    let background_color;
-                    this.weatherArray.push(iconName1);
-                    switch (iconName1){
-                        case 'partly-cloudy-night':
-                        case 'clear-night':
-                        case 'clear-day':
-                            backgroundImg = `${sunny}`;
-                            background_color = 'rgba(10, 181, 233)'
-                            break;
-                        case 'cloudy':
-                            backgroundImg = `${darkCloud}`;
-                            background_color = 'rgba(10, 181, 233)';
-                            break;
-                        case 'partly-cloudy-day':
-                            backgroundImg = `${partCloud}`;
-                            background_color = 'rgba(255, 143, 0)';
-                            break;
-                        case 'rain':
-                            backgroundImg = `${rainy}`;
-                            background_color = 'rgb(139, 135, 129)';
-                            break;
-                        case 'sleet':
-                        case 'snow':
-                            backgroundImg = `${snow}`;
-                            background_color = 'rgb(142, 107, 168)';
-                            break;
-                        case 'wind':
-                            backgroundImg = `${wind}`;
-                            background_color = 'rgb(192, 196, 197)';
-                            break;
-                        case 'fog':
-                            backgroundImg = `${fog}`;
-                            background_color = 'rgba(10, 181, 233)';
-                            break;
-                    }
-                    let rainText;
-                    if(isNaN(response.daily.data[0].precipProbability)){
-                        rainText = 'Chance of Rain: Unknown'
-                    } else {
-                        let rainProb = ((response.daily.data[0].precipProbability)*100);
-                        rainProb = rainProb.toFixed(0);
-                        rainText = `Chance of Rain: ${rainProb}%`
-                    }
+                let iconName1 = response.hourly.icon;
+                let backgroundImg;
+                let background_color;
+                this.weatherArray.push(iconName1);
+                switch (iconName1){                    
+                    case 'clear-night':
+                    case 'clear-day':
+                        backgroundImg = `${sunny}`;
+                        background_color = 'rgba(10, 181, 233)'
+                        break;
+                    case 'cloudy':
+                        backgroundImg = `${darkCloud}`;
+                        background_color = 'rgb(153, 153, 153)';
+                        break;
+                    case 'partly-cloudy-night':
+                    case 'partly-cloudy-day':
+                        backgroundImg = `${partCloud}`;
+                        background_color = 'rgb(95, 158, 160)';
+                        break;
+                    case 'rain':
+                        backgroundImg = `${rainy}`;
+                        background_color = 'rgb(139, 135, 129)';
+                        break;
+                    case 'sleet':
+                    case 'snow':
+                        backgroundImg = `${snow}`;
+                        background_color = 'rgb(43, 146, 183)';
+                        break;
+                    case 'wind':
+                        backgroundImg = `${wind}`;
+                        background_color = 'rgb(192, 196, 197)';
+                        break;
+                    case 'fog':
+                        backgroundImg = `${fog}`;
+                        background_color = 'rgba(10, 181, 233)';
+                        break;
+                }
+                let rainText;
+                if(isNaN(response.daily.data[0].precipProbability)){
+                    rainText = 'Chance of Rain: Unknown'
+                } else {
+                    let rainProb = ((response.daily.data[0].precipProbability)*100);
+                    rainProb = rainProb.toFixed(0);
+                    rainText = `Chance of Rain: ${rainProb}%`
+                }
 
-                    this.setState({
-                        day1Back:{
-                            backgroundImage: `url(${backgroundImg})`,
-                            backgroundColor: background_color,
-                        },
-                        day1Text:{
-                            summary: response.daily.data[0].summary,
-                            high: `High: ${response.daily.data[0].temperatureHigh.toFixed(0)} F`,
-                            low: `Low: ${response.daily.data[0].temperatureLow.toFixed(0)} F`,
-                            rain: rainText,
-                        }
-                    })          
+                switch(num){
+                    case 1:
+                        this.setState({
+                            day1Back:{
+                                backgroundImage: `url(${backgroundImg})`,
+                                backgroundColor: background_color
+                            },
+                            day1Text:{
+                                summary: response.daily.data[0].summary,
+                                high: `High: ${response.daily.data[0].temperatureHigh.toFixed(0)} F`,
+                                low: `Low: ${response.daily.data[0].temperatureLow.toFixed(0)} F`,
+                                rain: rainText
+                            },
+                            dateChanged:false
+                        }); 
+                        break;
+                    case 2:
+                        this.setState({
+                            day2Back:{
+                                backgroundImage: `url(${backgroundImg})`,
+                                backgroundColor: background_color
+                            },
+                            day2Text:{
+                                summary: response.daily.data[0].summary,
+                                high: `High: ${response.daily.data[0].temperatureHigh.toFixed(0)} F`,
+                                low: `Low: ${response.daily.data[0].temperatureLow.toFixed(0)} F`,
+                                rain: rainText
+                            }
+                        }); 
+                        break;
+                    case 3:
+                        this.setState({
+                            day3Back:{
+                                backgroundImage: `url(${backgroundImg})`,
+                                backgroundColor: background_color
+                            },
+                            day3Text:{
+                                summary: response.daily.data[0].summary,
+                                high: `High: ${response.daily.data[0].temperatureHigh.toFixed(0)} F`,
+                                low: `Low: ${response.daily.data[0].temperatureLow.toFixed(0)} F`,
+                                rain: rainText
+                            }
+                        }); 
+                        break;
+                }                             
             }, 
             error: response => {
                 this.setState({
-                    day1Text:{summary:'Sorry, we had trouble getting data for that day.'}
+                    text:{summary:'Sorry, we had trouble getting data for that day.'}
                 })
             }
         });
-
-        ajax({
-            url: 'https://api.darksky.net/forecast/'+keys.darksky+'/' + this.state.latlong + ',' + this.state.day2,
-            dataType: 'jsonp',
-            method: 'get',
-            success: response => {
-                    let iconName2 = response.currently.icon;
-                    // console.log('Day 2 summary: '+iconName2);
-                    let backgroundImg;
-                    let background_color;
-                    this.weatherArray.push(iconName2);
-                    switch (iconName2){
-                        case 'partly-cloudy-night':
-                        case 'clear-night':
-                        case 'clear-day':
-                            backgroundImg = `${sunny}`;
-                            background_color = 'rgb(10, 181, 233)'
-                            break;
-                        case 'cloudy':
-                            backgroundImg = `${darkCloud}`;
-                            background_color = 'rgb(10, 181, 233)';
-                            break;
-                        case 'partly-cloudy-day':
-                            backgroundImg = `${partCloud}`;
-                            background_color = 'rgb(255, 143, 0)';
-                            break;
-                        case 'rain':
-                            backgroundImg = `${rainy}`;
-                            background_color = 'rgb(139, 135, 129)';
-                            break;
-                        case 'sleet':
-                        case 'snow':
-                            backgroundImg = `${snow}`;
-                            background_color = 'rgb(142, 107, 168)';
-                            break;
-                        case 'wind':
-                            backgroundImg = `${wind}`;
-                            background_color = 'rgb(192, 196, 197)';
-                            break;
-                        case 'fog':
-                            backgroundImg = `${fog}`;
-                            background_color = 'rgb(10, 181, 233)';
-                            break;
-                    }
-                    let rainText;
-                    if(isNaN(response.daily.data[0].precipProbability)){
-                        rainText = 'Chance of Rain: Unknown'
-                    } else {
-                        let rainProb = ((response.daily.data[0].precipProbability)*100);
-                        rainProb = rainProb.toFixed(0);
-                        rainText = `Chance of Rain: ${rainProb}%`
-                    }
-
-                    this.setState({
-                        day2Back:{
-                            backgroundImage: `url(${backgroundImg})`,
-                            backgroundColor: background_color,
-                        },
-                        day2Text:{
-                            summary: response.daily.data[0].summary,
-                            high: `High: ${response.daily.data[0].temperatureHigh.toFixed(0)} F`,
-                            low: `Low: ${response.daily.data[0].temperatureLow.toFixed(0)} F`,
-                            rain: rainText,
-                        }
-                    })          
-            }, 
-            error: response =>{
-                this.setState({
-                    day2Text:{summary:'Sorry, we had trouble getting data for that day.'}
-                })
-            }
-        });
-        ajax({
-            url: 'https://api.darksky.net/forecast/'+keys.darksky+'/' + this.state.latlong + ',' + this.state.day3,
-            dataType: 'jsonp',
-            method: 'get',
-            success: response => {
-                    let iconName3 = response.currently.icon;
-                    // console.log('Day 3 summary: '+iconName3);
-                    let backgroundImg;
-                    let background_color;
-                    this.weatherArray.push(iconName3);
-                    switch (iconName3){
-                        case 'partly-cloudy-night':
-                        case 'clear-night':
-                        case 'clear-day':
-                            backgroundImg = `${sunny}`;
-                            background_color = 'rgb(10, 181, 233)'
-                            break;
-                        case 'cloudy':
-                            backgroundImg = `${darkCloud}`;
-                            background_color = 'rgb(10, 181, 233)';
-                            break;
-                        case 'partly-cloudy-day':
-                            backgroundImg = `${partCloud}`;
-                            background_color = 'rgb(255, 143, 0)';
-                            break;
-                        case 'rain':
-                            backgroundImg = `${rainy}`;
-                            background_color = 'rgb(139, 135, 129)';
-                            break;
-                        case 'sleet':
-                        case 'snow':
-                            backgroundImg = `${snow}`;
-                            background_color = 'rgb(142, 107, 168)';
-                            break;
-                        case 'wind':
-                            backgroundImg = `${wind}`;
-                            background_color = 'rgb(192, 196, 197)';
-                            break;
-                        case 'fog':
-                            backgroundImg = `${fog}`;
-                            background_color = 'rgb(10, 181, 233)';
-                            break;
-                    }
-                    let rainText;
-                    if(isNaN(response.daily.data[0].precipProbability)){
-                        rainText = 'Chance of Rain: Unknown'
-                    } else {
-                        let rainProb = ((response.daily.data[0].precipProbability)*100);
-                        rainProb = rainProb.toFixed(0);
-                        rainText = `Chance of Rain: ${rainProb}%`
-                    }
-
-                    this.setState({
-                        day3Back:{
-                            backgroundImage: `url(${backgroundImg})`,
-                            backgroundColor: background_color,
-                        },
-                        day3Text:{
-                            summary: response.daily.data[0].summary,
-                            high: `High: ${response.daily.data[0].temperatureHigh.toFixed(0)} F`,
-                            low: `Low: ${response.daily.data[0].temperatureLow.toFixed(0)} F`,
-                            rain: rainText,
-                        }
-                    })          
-            }, 
-            error: response =>{
-                this.setState({
-                    day3Text:{summary:'Sorry, we had trouble getting data for that day.'}
-                })
-            }
-        });
-        
     }
-    
+
     render(){
         return(
             <div className="weatherContainer">
