@@ -148,6 +148,8 @@ class TrailList extends Component {
             var divToFocus = document.getElementById(trailObj.name);
             divToFocus.classList.add("trailDivFocus");
             divToFocus.scrollIntoView();
+            var logoToFocus = document.getElementsByClassName('header');            
+            logoToFocus[0].scrollIntoView();
 
             setTimeout((()=>{
                 this.setIcon({
