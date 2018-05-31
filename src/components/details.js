@@ -71,7 +71,7 @@ class Details extends Component {
                     <div className='detailsInfoContainer'>
                         <img src={trailInfo.imgSmallMed || earth} className='detailsImg' />
                         <div className='detailsTextArea'>
-                            <div className='detailsName'>{trailInfo.name}</div>
+                            <a href={trailInfo.url} target='_blank'> <div className='detailsName'>{trailInfo.name}</div></a>
                             <div className='detailsLocation'>{trailInfo.location}</div>
                             <div className='detailsSummary'>{trailInfo.summary}</div>
                             <div className='detailsLength'><span className='detailsTitle'>Length:</span> {trailInfo.length} miles</div>

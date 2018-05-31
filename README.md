@@ -4,7 +4,7 @@ trailMix is a trail-finding based web application built by a team of 5 web devel
 
 ## Usage
 
-Our application was created for any level of hiker to find a trail either nerby them or any location they choose.  Your next hike is just a few clocks away.  Sort by trail rating, length or difficulty to match your needs.  Get directions to the trail using Google Maps and make sure to select a date for your hike to get the weather in the area!
+Our application was created for any level of hiker to find a trail either nerby them or any location they choose.  Your next hike is just a few clocks away. Sort by trail rating, length or difficulty to match your needs. Get directions to the trail using Google Maps and make sure to select a date for your hike to get the weather in the area!
 
 ## Project
 
