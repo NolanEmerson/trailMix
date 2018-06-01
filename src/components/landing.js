@@ -23,6 +23,9 @@ class Landing extends Component{
         if(this.props.match.path === '/notValid'){
             notValidMessage = <h3 className='notValid'>No location found. Please refine your search.</h3>
         }
+        else if(this.props.match.path === '/notResponse'){
+            notValidMessage = <h3 className='notValid'>The search cannot be completed rigth now. Please try again later</h3>
+        }
 
         return (
             <div className="mainPage">
