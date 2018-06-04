@@ -49,8 +49,9 @@ class Search extends Component{
         let inputField = document.getElementById('searchInput');
         let inputComplete = new google.maps.places.Autocomplete(inputField);
         google.maps.event.addListener(inputComplete, 'place_changed', () => {
-            if (inputComplete.gm_accessors_.place.fd.formattedPrediction){
-                this.sendLocation(inputComplete.gm_accessors_.place.fd.formattedPrediction);
+            var place = inputComplete.getPlace();
+            if (place.formatted_address){
+                this.sendLocation(place.formatted_address);
             }
         });
     }
