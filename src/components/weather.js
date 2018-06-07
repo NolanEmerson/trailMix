@@ -183,7 +183,8 @@ class Weather extends Component{
                                 high: `High: ${response.daily.data[0].temperatureHigh.toFixed(0)} F`,
                                 low: `Low: ${response.daily.data[0].temperatureLow.toFixed(0)} F`,
                                 rain: rainText
-                            }
+                            },
+                            dateChanged:false
                         }); 
                         break;
                     case 3:
@@ -197,14 +198,16 @@ class Weather extends Component{
                                 high: `High: ${response.daily.data[0].temperatureHigh.toFixed(0)} F`,
                                 low: `Low: ${response.daily.data[0].temperatureLow.toFixed(0)} F`,
                                 rain: rainText
-                            }
+                            },
+                            dateChanged:false
                         }); 
                         break;
                 }                             
             }, 
             error: response => {
                 this.setState({
-                    text:{summary:'Sorry, we had trouble getting data for that day.'}
+                    text:{summary:'Sorry, we had trouble getting data for that day.'},
+                    dateChanged:false
                 })
             }
         });
